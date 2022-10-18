@@ -1,3 +1,3 @@
 <template>
-  <h1>Home Page</h1>
+  <h1>Simple Activity Tracker</h1>
 </template>
