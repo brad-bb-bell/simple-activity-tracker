@@ -33,8 +33,8 @@ export default {
     };
   },
   methods: {
-    deleteActivity(activity) {
-      console.log("activity", activity);
+    deleteActivity(id) {
+      console.log("delete-activity id", id);
     },
   },
   created() {

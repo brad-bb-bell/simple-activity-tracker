@@ -1,8 +1,8 @@
 <template>
   <div class="activity">
     <h3>
-      {{ activity }}
-      <i @click="onDelete(activity)" class="fas fa-times"></i>
+      {{ activity.name }}
+      <i @click="onDelete(activity.id)" class="fas fa-times"></i>
     </h3>
   </div>
 </template>
@@ -11,11 +11,11 @@
 export default {
   name: "activity-single",
   props: {
-    activity: String,
+    activity: Object,
   },
   methods: {
-    onDelete(activity) {
-      this.$emit("delete-activity", activity);
+    onDelete(id) {
+      this.$emit("delete-activity", id);
     },
   },
 };

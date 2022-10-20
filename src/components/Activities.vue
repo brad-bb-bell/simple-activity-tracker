@@ -1,6 +1,6 @@
 <template>
   <div :key="activity.id" v-for="activity in activities">
-    <Activity @delete-activity="$emit('delete-activity', activity)" :activity="activity" />
+    <Activity @delete-activity="$emit('delete-activity', activity.id)" :activity="activity" />
   </div>
 </template>
 
