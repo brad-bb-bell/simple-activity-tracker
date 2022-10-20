@@ -11,16 +11,38 @@
   <!-- <router-view /> -->
   <div class="container">
     <Header title="Simple Activity Tracker" />
+    <Activities @delete-activity="deleteActivity" :activities="activities" />
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import Header from "./components/Header.vue";
+import Activities from "./components/Activities.vue";
 
 export default {
   name: "App",
   components: {
     Header,
+    Activities,
+  },
+  data() {
+    return {
+      user: {},
+      activities: [],
+    };
+  },
+  methods: {
+    deleteActivity(activity) {
+      console.log("activity", activity);
+    },
+  },
+  created() {
+    axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
+      this.user = response.data;
+      this.activities = response.data.activities;
+      console.log("Current user", response.data);
+    });
   },
 };
 </script>
