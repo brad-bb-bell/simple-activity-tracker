@@ -13,7 +13,7 @@
     <Header title="Simple Activity Tracker" />
     <Activities @delete-activity="deleteActivity" :activities="activities" />
   </div>
-  <Dropdown />
+  <Dropdown :activities="activities" />
 </template>
 
 <script>
