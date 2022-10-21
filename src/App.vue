@@ -13,18 +13,21 @@
     <Header title="Simple Activity Tracker" />
     <Activities @delete-activity="deleteActivity" :activities="activities" />
   </div>
+  <Dropdown />
 </template>
 
 <script>
 import axios from "axios";
 import Header from "./components/Header.vue";
 import Activities from "./components/Activities.vue";
+import Dropdown from "./components/Dropdown.vue";
 
 export default {
   name: "App",
   components: {
     Header,
     Activities,
+    Dropdown,
   },
   data() {
     return {
@@ -34,7 +37,9 @@ export default {
   },
   methods: {
     deleteActivity(id) {
-      console.log("delete-activity id", id);
+      axios.delete("/activities/" + id + ".json").then((response) => {
+        console.log("Success,", response.data);
+      });
     },
   },
   created() {
