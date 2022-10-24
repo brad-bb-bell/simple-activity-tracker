@@ -7,11 +7,12 @@
     <router-link to="/login">Login</router-link>
     |
     <router-link to="/logout">Logout</router-link>
-  </div> -->
-  <!-- <router-view /> -->
+  </div>
+  <router-view /> -->
+
   <div class="container">
     <Header title="Simple Activity Tracker" />
-    <Activities @delete-activity="deleteActivity" :activities="activities" />
+    <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
   </div>
   <Dropdown :activities="activities" />
 </template>
@@ -33,13 +34,36 @@ export default {
     return {
       user: {},
       activities: [],
+      isSelected: [],
     };
   },
   methods: {
     deleteActivity(id) {
-      axios.delete("/activities/" + id + ".json").then((response) => {
-        console.log("Success,", response.data);
-      });
+      if (confirm("Are you sure you want to permanently remove this activity?")) {
+        axios.delete("/activities/" + id + ".json").then((response) => {
+          console.log("Success,", response.data);
+        });
+      }
+    },
+    toggleActivity(id) {
+      var activity = this.activities.find((element) => element.id === id);
+      if (activity.selected === true) {
+        axios
+          .patch("/activities/" + id + ".json", {
+            selected: "false",
+          })
+          .then((response) => {
+            console.log("Activity unselected", response.data);
+          });
+      } else {
+        axios
+          .patch("/activities/" + id + ".json", {
+            selected: "true",
+          })
+          .then((response) => {
+            console.log("Activity selected", response.data);
+          });
+      }
     },
   },
   created() {

@@ -1,6 +1,10 @@
 <template>
   <div :key="activity.id" v-for="activity in activities">
-    <Activity @delete-activity="$emit('delete-activity', activity.id)" :activity="activity" />
+    <Activity
+      @toggle-select="$emit('toggle-select', activity.id)"
+      @delete-activity="$emit('delete-activity', activity.id)"
+      :activity="activity"
+    />
   </div>
 </template>
 
@@ -14,6 +18,6 @@ export default {
   components: {
     Activity,
   },
-  emits: ["delete-activity"],
+  emits: ["delete-activity", "toggle-select"],
 };
 </script>

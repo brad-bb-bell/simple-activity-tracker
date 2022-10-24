@@ -1,22 +1,17 @@
 <template>
-  <div class="activity">
+  <div @dblclick="$emit('toggle-select', activity.id)" :class="[activity.selected ? 'select' : '', 'activity']">
     <h3>
       {{ activity.name }}
-      <i @click="onDelete(activity.id)" class="fas fa-times"></i>
+      <i @click="$emit('delete-activity', activity.id)" class="fas fa-times"></i>
     </h3>
   </div>
 </template>
 
 <script>
 export default {
-  name: "activity-single",
+  name: ["activity-single", "toggle-select"],
   props: {
     activity: Object,
-  },
-  methods: {
-    onDelete(id) {
-      this.$emit("delete-activity", id);
-    },
   },
 };
 </script>
@@ -31,8 +26,8 @@ export default {
   padding: 10px 20px;
   cursor: pointer;
 }
-.activity.reminder {
-  border-left: 5px solid green;
+.activity.select {
+  border: 2px solid green;
 }
 .activity h3 {
   display: flex;
