@@ -1,0 +1,49 @@
+<template>
+  <form class="add-form">
+    <div class="form-control">
+      <input type="text" name="text" placeholder="Add Activity" />
+    </div>
+  </form>
+</template>
+
+<script>
+export default {
+  name: 'AddActivity',
+  data() {
+    return {
+      name; "",
+    }
+  }
+}
+</script>
+
+<style scoped>
+.add-form {
+  margin-bottom: 40px;
+}
+.form-control {
+  margin: 20px 0;
+}
+.form-control label {
+  display: block;
+}
+.form-control input {
+  width: 98%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 17px;
+}
+.form-control-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.form-control-check label {
+  flex: 1;
+}
+.form-control-check input {
+  flex: 2;
+  height: 20px;
+}
+</style>

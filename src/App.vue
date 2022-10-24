@@ -13,6 +13,7 @@
   <div class="container">
     <Header title="Simple Activity Tracker" />
     <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
+    <AddActivity />
   </div>
   <Dropdown :activities="activities" />
 </template>
@@ -22,6 +23,7 @@ import axios from "axios";
 import Header from "./components/Header.vue";
 import Activities from "./components/Activities.vue";
 import Dropdown from "./components/Dropdown.vue";
+import AddActivity from "./components/AddActivity.vue";
 
 export default {
   name: "App",
@@ -29,6 +31,7 @@ export default {
     Header,
     Activities,
     Dropdown,
+    AddActivity,
   },
   data() {
     return {
