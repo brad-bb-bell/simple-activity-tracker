@@ -51,21 +51,13 @@ export default {
     toggleActivity(id) {
       var activity = this.activities.find((element) => element.id === id);
       if (activity.selected === true) {
-        axios
-          .patch("/activities/" + id + ".json", {
-            selected: "false",
-          })
-          .then((response) => {
-            console.log("Activity unselected", response.data);
-          });
+        axios.patch("/activities/" + id + ".json", {
+          selected: "false",
+        });
       } else {
-        axios
-          .patch("/activities/" + id + ".json", {
-            selected: "true",
-          })
-          .then((response) => {
-            console.log("Activity selected", response.data);
-          });
+        axios.patch("/activities/" + id + ".json", {
+          selected: "true",
+        });
       }
     },
   },

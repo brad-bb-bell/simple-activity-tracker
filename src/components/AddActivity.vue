@@ -1,20 +1,42 @@
 <template>
-  <form class="add-form">
+  <form @submit="onSubmit" class="add-form">
     <div class="form-control">
-      <input type="text" name="text" placeholder="Add Activity" />
+      <input type="text" v-model="name" name="text" placeholder="Add Activity" />
     </div>
   </form>
 </template>
 
 <script>
 export default {
-  name: 'AddActivity',
+  name: "AddActivity",
+  props: {
+    user: Object,
+  },
   data() {
     return {
-      name; "",
-    }
-  }
-}
+      name: "",
+    };
+  },
+  methods: {
+    onSubmit(event) {
+      event.preventDefault();
+
+      if (!this.name) {
+        alert("Please add a new activity");
+        return;
+      }
+
+      const newActivity = {
+        user_id: localStorage.user_id,
+        name: this.name,
+      };
+
+      console.log(newActivity);
+
+      this.name = "";
+    },
+  },
+};
 </script>
 
 <style scoped>
