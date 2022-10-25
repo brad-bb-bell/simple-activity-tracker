@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   name: "AddActivity",
   props: {
@@ -27,14 +26,12 @@ export default {
         return;
       }
 
-      axios
-        .post("/activities.json", {
-          name: this.name,
-          user_id: localStorage.user_id,
-        })
-        .then((response) => {
-          console.log("Successfully added new activity", response.data);
-        });
+      const newActivity = {
+        user_id: localStorage.user_id,
+        name: this.name,
+      };
+
+      this.$emit("add-activity", newActivity);
 
       this.name = "";
     },

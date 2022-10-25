@@ -13,7 +13,7 @@
   <div class="container">
     <Header title="Simple Activity Tracker" />
     <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
-    <AddActivity />
+    <AddActivity @add-activity="addActivity" />
   </div>
   <Dropdown :activities="activities" />
 </template>
@@ -41,6 +41,11 @@ export default {
     };
   },
   methods: {
+    addActivity(activity) {
+      axios.post("/activities.json", activity).then((response) => {
+        console.log("Successfully added new activity", response.data);
+      });
+    },
     deleteActivity(id) {
       if (confirm("Are you sure you want to permanently remove this activity?")) {
         axios.delete("/activities/" + id + ".json").then((response) => {
