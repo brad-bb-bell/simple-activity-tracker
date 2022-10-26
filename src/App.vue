@@ -15,36 +15,45 @@
     <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
     <AddActivity @add-activity="addActivity" />
   </div>
+  <div class="container">
+    <Section title="Activities you've done" />
+    <DidIts :didIts="didIts" />
+  </div>
   <!-- <Dropdown :activities="activities" /> -->
 </template>
 
 <script>
 import axios from "axios";
 import Header from "./components/Header.vue";
+import Section from "./components/Section.vue";
 import Activities from "./components/Activities.vue";
-// import Dropdown from "./components/Dropdown.vue";
 import AddActivity from "./components/AddActivity.vue";
+import DidIts from "./components/DidIts.vue";
+// import Dropdown from "./components/Dropdown.vue";
 
 export default {
   name: "App",
   components: {
     Header,
+    Section,
     Activities,
-    // Dropdown,
     AddActivity,
+    DidIts,
+    // Dropdown,
   },
   data() {
     return {
       user: {},
       activities: [],
       isSelected: [],
+      didIts: [],
     };
   },
   methods: {
     addActivity(activity) {
       axios.post("/activities.json", activity).then((response) => {
         console.log("Successfully added new activity", response.data);
-        this.activies = this.activities.push(response.data);
+        this.activities.push(response.data);
       });
     },
     deleteActivity(id) {
@@ -76,6 +85,7 @@ export default {
     axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
       this.user = response.data;
       this.activities = response.data.activities;
+      this.didIts = response.data.did_its;
       console.log("Current user", response.data);
     });
   },
@@ -111,7 +121,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 13px;
   font-family: inherit;
 }
 .btn:focus {

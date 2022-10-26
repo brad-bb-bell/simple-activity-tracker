@@ -1,24 +1,17 @@
 <template>
   <header>
     <h1>{{ title }}</h1>
-    <Button text="Did It" color="green" />
   </header>
 </template>
 
 <script>
-import Button from "./Button";
-
 export default {
-  name: "main-header",
+  name: "section-header",
   props: {
     title: String,
   },
-  components: {
-    Button,
-  },
 };
 </script>
-
 <style scoped>
 header {
   display: flex;
