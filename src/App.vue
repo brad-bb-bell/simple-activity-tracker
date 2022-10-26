@@ -15,14 +15,14 @@
     <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
     <AddActivity @add-activity="addActivity" />
   </div>
-  <Dropdown :activities="activities" />
+  <!-- <Dropdown :activities="activities" /> -->
 </template>
 
 <script>
 import axios from "axios";
 import Header from "./components/Header.vue";
 import Activities from "./components/Activities.vue";
-import Dropdown from "./components/Dropdown.vue";
+// import Dropdown from "./components/Dropdown.vue";
 import AddActivity from "./components/AddActivity.vue";
 
 export default {
@@ -30,7 +30,7 @@ export default {
   components: {
     Header,
     Activities,
-    Dropdown,
+    // Dropdown,
     AddActivity,
   },
   data() {
@@ -44,25 +44,31 @@ export default {
     addActivity(activity) {
       axios.post("/activities.json", activity).then((response) => {
         console.log("Successfully added new activity", response.data);
+        this.activies = this.activities.push(response.data);
       });
     },
     deleteActivity(id) {
       if (confirm("Are you sure you want to permanently remove this activity?")) {
         axios.delete("/activities/" + id + ".json").then((response) => {
           console.log("Success,", response.data);
+          this.activities = this.activities.filter((activity) => activity.id != id);
         });
       }
     },
     toggleActivity(id) {
       var activity = this.activities.find((element) => element.id === id);
       if (activity.selected === true) {
-        axios.patch("/activities/" + id + ".json", {
-          selected: "false",
-        });
+        axios
+          .patch("/activities/" + id + ".json", {
+            selected: "false",
+          })
+          .then((this.activities[this.activities.findIndex((element) => element.id === id)].selected = false));
       } else {
-        axios.patch("/activities/" + id + ".json", {
-          selected: "true",
-        });
+        axios
+          .patch("/activities/" + id + ".json", {
+            selected: "true",
+          })
+          .then((this.activities[this.activities.findIndex((element) => element.id === id)].selected = true));
       }
     },
   },
