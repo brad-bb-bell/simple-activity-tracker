@@ -11,11 +11,23 @@
   <router-view /> -->
 
   <div class="container">
-    <Header title="Simple Activity Tracker" />
+    <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
     <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
     <AddActivity @add-activity="addActivity" />
-    <Datepicker v-model="date" placeholder="Select Date" :enableTimePicker="false" position="left" autoApply dark />
+    <Datepicker
+      v-model="date"
+      placeholder="Select Date"
+      :format="format"
+      :enableTimePicker="false"
+      @update:modelValue="showDate"
+      autoApply
+      dark
+    />
+    <div class="center">
+      <Button class="btn" text="Did It" color="green" />
+    </div>
   </div>
+
   <div class="container">
     <Section title="Activities you've done" />
     <DidIts :didIts="didIts" />
@@ -27,11 +39,13 @@
 import axios from "axios";
 import Header from "./components/Header.vue";
 import Section from "./components/Section.vue";
+import Button from "./components/Button.vue";
 import Activities from "./components/Activities.vue";
 import AddActivity from "./components/AddActivity.vue";
 import DidIts from "./components/DidIts.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { ref } from "vue";
 // import Dropdown from "./components/Dropdown.vue";
 
 export default {
@@ -40,6 +54,7 @@ export default {
     Datepicker,
     Header,
     Section,
+    Button,
     Activities,
     AddActivity,
     DidIts,
@@ -51,7 +66,6 @@ export default {
       activities: [],
       isSelected: [],
       didIts: [],
-      date: null,
     };
   },
   methods: {
@@ -85,6 +99,13 @@ export default {
           .then((this.activities[this.activities.findIndex((element) => element.id === id)].selected = true));
       }
     },
+    showDate(date) {
+      console.log(date);
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      console.log(`${year}-${month}-${day}`);
+    },
   },
   created() {
     axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
@@ -93,6 +114,22 @@ export default {
       this.didIts = response.data.did_its;
       console.log("Current user", response.data);
     });
+  },
+  setup() {
+    const date = ref(new Date());
+
+    const format = (date) => {
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+
+      return `${month}/${day}/${year}`;
+    };
+
+    return {
+      date,
+      format,
+    };
   },
 };
 </script>
@@ -116,18 +153,26 @@ body {
   padding: 30px;
   border-radius: 5px;
 }
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
 .btn {
   display: inline-block;
   background: #000;
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  margin: 5px;
+  padding: 30px 30px;
+  margin-top: 10px;
+  margin-left: 3px;
   border-radius: 5px;
   cursor: pointer;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 20px;
   font-family: inherit;
+  width: 100%;
 }
 .btn:focus {
   outline: none;
@@ -145,7 +190,7 @@ body {
   --dp-hover-color: #484848;
   --dp-hover-text-color: #ffffff;
   --dp-hover-icon-color: #959595;
-  --dp-primary-color: #005cb2;
+  --dp-primary-color: green;
   --dp-primary-text-color: #ffffff;
   --dp-secondary-color: #a9a9a9;
   --dp-border-color: #2d2d2d;
@@ -158,15 +203,15 @@ body {
   --dp-success-color-disabled: #428f59;
   --dp-icon-color: #959595;
   --dp-danger-color: #e53935;
-  --dp-highlight-color: rgba(0, 92, 178, 0.2);
+  --dp-highlight-color: rgba(0, 178, 3, 0.2);
 }
 .dp__theme_dark input {
-  width: 40%;
-  height: 40px;
+  width: 99%;
+  height: 45px;
   font-size: 17px;
   display: flex;
-  margin-left: 4px;
-  align-items: center;
+  margin-left: 3px;
+  align-items: left;
   justify-content: space-between;
 }
 </style>
