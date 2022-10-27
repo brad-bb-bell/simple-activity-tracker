@@ -1,18 +1,14 @@
 <template>
-  <button @click="onClick()" :style="{ background: color }" class="btn">{{ text }}</button>
+  <button @click="$emit('did-it')" :style="{ background: color }" class="btn">{{ text }}</button>
 </template>
 
 <script>
 export default {
-  name: "add-activity-button",
+  name: "did-it-button",
   props: {
     text: String,
     color: String,
   },
-  methods: {
-    onClick() {
-      console.log("click");
-    },
-  },
+  emits: ["did-it"],
 };
 </script>

@@ -15,7 +15,7 @@
     <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
     <AddActivity @add-activity="addActivity" />
     <Datepicker
-      v-model="date"
+      v-model="calendarDate"
       placeholder="Select Date"
       :format="format"
       :enableTimePicker="false"
@@ -24,7 +24,7 @@
       dark
     />
     <div class="center">
-      <Button class="btn" text="Did It" color="green" />
+      <Button @did-it="didIt" class="btn" text="Did It" color="green" />
     </div>
   </div>
 
@@ -64,8 +64,9 @@ export default {
     return {
       user: {},
       activities: [],
-      isSelected: [],
+      selectedId: [],
       didIts: [],
+      calendarDate: "",
     };
   },
   methods: {
@@ -99,12 +100,27 @@ export default {
           .then((this.activities[this.activities.findIndex((element) => element.id === id)].selected = true));
       }
     },
+    didIt() {
+      this.activities.forEach((activity) => {
+        if (activity.selected === true) {
+          this.selectedId.push(activity.id);
+        }
+      });
+      if (!this.calendarDate) {
+        alert("Please select a date.");
+      }
+      if (this.selectedId.length === 0) {
+        alert("Please select an activity.");
+      }
+      console.log(this.selectedId);
+      console.log(this.calendarDate);
+      this.selectedId = [];
+    },
     showDate(date) {
-      console.log(date);
       const day = date.getDate();
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
-      console.log(`${year}-${month}-${day}`);
+      this.calendarDate = `${year}-${month}-${day}`;
     },
   },
   created() {
