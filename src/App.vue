@@ -14,6 +14,7 @@
     <Header title="Simple Activity Tracker" />
     <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
     <AddActivity @add-activity="addActivity" />
+    <Datepicker v-model="date" placeholder="Select Date" :enableTimePicker="false" position="left" autoApply dark />
   </div>
   <div class="container">
     <Section title="Activities you've done" />
@@ -29,11 +30,14 @@ import Section from "./components/Section.vue";
 import Activities from "./components/Activities.vue";
 import AddActivity from "./components/AddActivity.vue";
 import DidIts from "./components/DidIts.vue";
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 // import Dropdown from "./components/Dropdown.vue";
 
 export default {
   name: "App",
   components: {
+    Datepicker,
     Header,
     Section,
     Activities,
@@ -47,6 +51,7 @@ export default {
       activities: [],
       isSelected: [],
       didIts: [],
+      date: null,
     };
   },
   methods: {
@@ -133,5 +138,35 @@ body {
 .btn-block {
   display: block;
   width: 100%;
+}
+.dp__theme_dark {
+  --dp-background-color: #212121;
+  --dp-text-color: #ffffff;
+  --dp-hover-color: #484848;
+  --dp-hover-text-color: #ffffff;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: #005cb2;
+  --dp-primary-text-color: #ffffff;
+  --dp-secondary-color: #a9a9a9;
+  --dp-border-color: #2d2d2d;
+  --dp-menu-border-color: #2d2d2d;
+  --dp-border-color-hover: #aaaeb7;
+  --dp-disabled-color: #737373;
+  --dp-scroll-bar-background: #212121;
+  --dp-scroll-bar-color: #484848;
+  --dp-success-color: #00701a;
+  --dp-success-color-disabled: #428f59;
+  --dp-icon-color: #959595;
+  --dp-danger-color: #e53935;
+  --dp-highlight-color: rgba(0, 92, 178, 0.2);
+}
+.dp__theme_dark input {
+  width: 40%;
+  height: 40px;
+  font-size: 17px;
+  display: flex;
+  margin-left: 4px;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

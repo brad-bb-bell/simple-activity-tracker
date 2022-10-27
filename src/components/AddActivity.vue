@@ -41,7 +41,7 @@ export default {
 
 <style scoped>
 .add-form {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 .form-control {
   margin: 20px 0;
