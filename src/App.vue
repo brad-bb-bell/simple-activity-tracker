@@ -19,7 +19,7 @@
       placeholder="Select Date"
       :format="format"
       :enableTimePicker="false"
-      @update:modelValue="showDate"
+      @update:modelValue="calendarDate"
       autoApply
       dark
     />
@@ -112,9 +112,20 @@ export default {
       if (this.selectedId.length === 0) {
         alert("Please select an activity.");
       }
-      console.log(this.selectedId);
-      console.log(this.calendarDate);
+      for (let index = 0; index < this.selectedId.length; index++) {
+        axios
+          .post("/did_its.json", {
+            user_id: this.user.id,
+            activity_id: this.selectedId[index],
+            date: this.calendarDate,
+          })
+          .then((response) => {
+            console.log("Successfully recorded activity", response.data);
+            this.didIts.push(response.data);
+          });
+      }
       this.selectedId = [];
+      this.calendarDate = "";
     },
     showDate(date) {
       const day = date.getDate();
