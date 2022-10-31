@@ -29,7 +29,10 @@
   </div>
 
   <div class="container">
-    <Section title="Activities you've done" />
+    <Section title="Favorite activity" />
+  </div>
+  <div class="container">
+    <Section title="Recent activities" />
     <DidIts :didIts="didIts" />
   </div>
   <!-- <Dropdown :activities="activities" /> -->
@@ -108,9 +111,11 @@ export default {
       });
       if (!this.calendarDate) {
         alert("Please select a date.");
+        return;
       }
       if (this.selectedId.length === 0) {
         alert("Please select an activity.");
+        return;
       }
       for (let index = 0; index < this.selectedId.length; index++) {
         axios
@@ -122,6 +127,12 @@ export default {
           .then((response) => {
             console.log("Successfully recorded activity", response.data);
             this.didIts.push(response.data);
+            this.didIts.sort(function (a, b) {
+              var c = new Date(a.date);
+              var d = new Date(b.date);
+              return c - d;
+            });
+            this.didIts = this.didIts.reverse().slice(0, 10);
           });
       }
       this.selectedId = [];
@@ -133,12 +144,19 @@ export default {
       const year = date.getFullYear();
       this.calendarDate = `${year}-${month}-${day}`;
     },
+    getFavorites() {},
   },
   created() {
     axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
       this.user = response.data;
       this.activities = response.data.activities;
       this.didIts = response.data.did_its;
+      this.didIts.sort(function (a, b) {
+        var c = new Date(a.date);
+        var d = new Date(b.date);
+        return c - d;
+      });
+      this.didIts = this.didIts.reverse().slice(0, 10);
       console.log("Current user", response.data);
     });
   },
