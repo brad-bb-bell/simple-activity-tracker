@@ -30,6 +30,7 @@
 
   <div class="container">
     <Section title="Favorite activity" />
+    <Favorite :name="highestActivity" :count="highestCount" />
   </div>
   <div class="container">
     <Section title="Recent activities" />
@@ -44,8 +45,9 @@ import Header from "./components/Header.vue";
 import Section from "./components/Section.vue";
 import Button from "./components/Button.vue";
 import Activities from "./components/Activities.vue";
-import AddActivity from "./components/AddActivity.vue";
 import DidIts from "./components/DidIts.vue";
+import AddActivity from "./components/AddActivity.vue";
+import Favorite from "./components/Favorite.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "vue";
@@ -61,6 +63,7 @@ export default {
     Activities,
     AddActivity,
     DidIts,
+    Favorite,
     // Dropdown,
   },
   data() {
@@ -70,6 +73,8 @@ export default {
       selectedId: [],
       didIts: [],
       calendarDate: "",
+      highestActivity: "Favorite Activity",
+      highestCount: 0,
     };
   },
   methods: {
@@ -221,16 +226,16 @@ export default {
         let count = favorites.get(didIt.name) + 1;
         favorites.set(didIt.name, count);
       });
-      let highestCount = 0;
-      let highestActivity = "";
+      this.highestCount = 0;
+      this.highestActivity = "";
       this.activities.forEach((activity) => {
-        if (favorites.get(activity.name) > highestCount) {
-          highestCount = favorites.get(activity.name);
-          highestActivity = activity.name;
+        if (favorites.get(activity.name) > this.highestCount) {
+          this.highestCount = favorites.get(activity.name);
+          this.highestActivity = activity.name;
         }
       });
       favorites.display();
-      console.log(highestActivity, highestCount);
+      console.log(this.highestActivity, this.highestCount);
     },
   },
   created() {
