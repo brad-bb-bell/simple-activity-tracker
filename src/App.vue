@@ -144,13 +144,101 @@ export default {
       const year = date.getFullYear();
       this.calendarDate = `${year}-${month}-${day}`;
     },
-    getFavorites() {},
+    getFavorites() {
+      class HashTable {
+        constructor() {
+          this.table = new Array(127);
+          this.size = 0;
+        }
+
+        _hash(key) {
+          let hash = 0;
+          for (let i = 0; i < key.length; i++) {
+            hash += key.charCodeAt(i);
+          }
+          return hash % this.table.length;
+        }
+
+        set(key, value) {
+          const index = this._hash(key);
+          if (this.table[index]) {
+            for (let i = 0; i < this.table[index].length; i++) {
+              // Find the key/value pair in the chain
+              if (this.table[index][i][0] === key) {
+                this.table[index][i][1] = value;
+                return;
+              }
+            }
+            // not found, push a new key/value pair
+            this.table[index].push([key, value]);
+          } else {
+            this.table[index] = [];
+            this.table[index].push([key, value]);
+          }
+          this.size++;
+        }
+
+        get(key) {
+          const target = this._hash(key);
+          if (this.table[target]) {
+            for (let i = 0; i < this.table.length; i++) {
+              if (this.table[target][i][0] === key) {
+                return this.table[target][i][1];
+              }
+            }
+          }
+          return undefined;
+        }
+
+        remove(key) {
+          const index = this._hash(key);
+
+          if (this.table[index] && this.table[index].length) {
+            for (let i = 0; i < this.table.length; i++) {
+              if (this.table[index][i][0] === key) {
+                this.table[index].splice(i, 1);
+                this.size--;
+                return true;
+              }
+            }
+          } else {
+            return false;
+          }
+        }
+
+        display() {
+          this.table.forEach((values, index) => {
+            const chainedValues = values.map(([key, value]) => `[ ${key}: ${value} ]`);
+            console.log(`${index}: ${chainedValues}`);
+          });
+        }
+      }
+      const favorites = new HashTable();
+      this.activities.forEach((activity) => {
+        favorites.set(activity.name, 0);
+      });
+      this.didIts.forEach((didIt) => {
+        let count = favorites.get(didIt.name) + 1;
+        favorites.set(didIt.name, count);
+      });
+      let highestCount = 0;
+      let highestActivity = "";
+      this.activities.forEach((activity) => {
+        if (favorites.get(activity.name) > highestCount) {
+          highestCount = favorites.get(activity.name);
+          highestActivity = activity.name;
+        }
+      });
+      favorites.display();
+      console.log(highestActivity, highestCount);
+    },
   },
   created() {
     axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
       this.user = response.data;
       this.activities = response.data.activities;
       this.didIts = response.data.did_its;
+      this.getFavorites();
       this.didIts.sort(function (a, b) {
         var c = new Date(a.date);
         var d = new Date(b.date);
