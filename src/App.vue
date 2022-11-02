@@ -73,6 +73,7 @@ export default {
       selectedId: [],
       didIts: [],
       calendarDate: "",
+      favorites: [],
       highestActivity: "Favorite Activity",
       highestCount: 0,
     };
@@ -132,6 +133,11 @@ export default {
           .then((response) => {
             console.log("Successfully recorded activity", response.data);
             this.didIts.push(response.data);
+            if (this.highestActivity === response.data.name) {
+              let temp = this.favorites.get(response.data.name) + 1;
+              this.favorites.set(response.data.name, temp);
+              this.highestCount = this.favorites.get(response.data.name);
+            }
             this.didIts.sort(function (a, b) {
               var c = new Date(a.date);
               var d = new Date(b.date);
@@ -150,91 +156,22 @@ export default {
       this.calendarDate = `${year}-${month}-${day}`;
     },
     getFavorites() {
-      class HashTable {
-        constructor() {
-          this.table = new Array(127);
-          this.size = 0;
-        }
-
-        _hash(key) {
-          let hash = 0;
-          for (let i = 0; i < key.length; i++) {
-            hash += key.charCodeAt(i);
-          }
-          return hash % this.table.length;
-        }
-
-        set(key, value) {
-          const index = this._hash(key);
-          if (this.table[index]) {
-            for (let i = 0; i < this.table[index].length; i++) {
-              // Find the key/value pair in the chain
-              if (this.table[index][i][0] === key) {
-                this.table[index][i][1] = value;
-                return;
-              }
-            }
-            // not found, push a new key/value pair
-            this.table[index].push([key, value]);
-          } else {
-            this.table[index] = [];
-            this.table[index].push([key, value]);
-          }
-          this.size++;
-        }
-
-        get(key) {
-          const target = this._hash(key);
-          if (this.table[target]) {
-            for (let i = 0; i < this.table.length; i++) {
-              if (this.table[target][i][0] === key) {
-                return this.table[target][i][1];
-              }
-            }
-          }
-          return undefined;
-        }
-
-        remove(key) {
-          const index = this._hash(key);
-
-          if (this.table[index] && this.table[index].length) {
-            for (let i = 0; i < this.table.length; i++) {
-              if (this.table[index][i][0] === key) {
-                this.table[index].splice(i, 1);
-                this.size--;
-                return true;
-              }
-            }
-          } else {
-            return false;
-          }
-        }
-
-        display() {
-          this.table.forEach((values, index) => {
-            const chainedValues = values.map(([key, value]) => `[ ${key}: ${value} ]`);
-            console.log(`${index}: ${chainedValues}`);
-          });
-        }
-      }
-      const favorites = new HashTable();
       this.activities.forEach((activity) => {
-        favorites.set(activity.name, 0);
+        this.favorites.set(activity.name, 0);
       });
       this.didIts.forEach((didIt) => {
-        let count = favorites.get(didIt.name) + 1;
-        favorites.set(didIt.name, count);
+        let count = this.favorites.get(didIt.name) + 1;
+        this.favorites.set(didIt.name, count);
       });
       this.highestCount = 0;
       this.highestActivity = "";
       this.activities.forEach((activity) => {
-        if (favorites.get(activity.name) > this.highestCount) {
-          this.highestCount = favorites.get(activity.name);
+        if (this.favorites.get(activity.name) > this.highestCount) {
+          this.highestCount = this.favorites.get(activity.name);
           this.highestActivity = activity.name;
         }
       });
-      favorites.display();
+      this.favorites.display();
       console.log(this.highestActivity, this.highestCount);
     },
   },
@@ -252,6 +189,75 @@ export default {
       this.didIts = this.didIts.reverse().slice(0, 10);
       console.log("Current user", response.data);
     });
+    class HashTable {
+      constructor() {
+        this.table = new Array(127);
+        this.size = 0;
+      }
+
+      _hash(key) {
+        let hash = 0;
+        for (let i = 0; i < key.length; i++) {
+          hash += key.charCodeAt(i);
+        }
+        return hash % this.table.length;
+      }
+
+      set(key, value) {
+        const index = this._hash(key);
+        if (this.table[index]) {
+          for (let i = 0; i < this.table[index].length; i++) {
+            // Find the key/value pair in the chain
+            if (this.table[index][i][0] === key) {
+              this.table[index][i][1] = value;
+              return;
+            }
+          }
+          // not found, push a new key/value pair
+          this.table[index].push([key, value]);
+        } else {
+          this.table[index] = [];
+          this.table[index].push([key, value]);
+        }
+        this.size++;
+      }
+
+      get(key) {
+        const target = this._hash(key);
+        if (this.table[target]) {
+          for (let i = 0; i < this.table.length; i++) {
+            if (this.table[target][i][0] === key) {
+              return this.table[target][i][1];
+            }
+          }
+        }
+        return undefined;
+      }
+
+      remove(key) {
+        const index = this._hash(key);
+
+        if (this.table[index] && this.table[index].length) {
+          for (let i = 0; i < this.table.length; i++) {
+            if (this.table[index][i][0] === key) {
+              this.table[index].splice(i, 1);
+              this.size--;
+              return true;
+            }
+          }
+        } else {
+          return false;
+        }
+      }
+
+      display() {
+        this.table.forEach((values, index) => {
+          const chainedValues = values.map(([key, value]) => `[ ${key}: ${value} ]`);
+          console.log(`${index}: ${chainedValues}`);
+        });
+      }
+    }
+    this.favorites = new HashTable();
   },
   setup() {
     const date = ref(new Date());

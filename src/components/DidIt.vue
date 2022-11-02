@@ -12,9 +12,9 @@ export default {
   },
   methods: {
     dateFormat(date) {
-      const displayDate = new Date(date);
+      const displayDate = new Date(date.replace(/-/g, "/"));
       const options = { weekday: "long", month: "short", day: "numeric" };
-      return displayDate.toLocaleDateString(undefined, options);
+      return displayDate.toLocaleDateString("en-US", options);
     },
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>{{ name }}: {{ count }} times</h3>
+    <h3>{{ name }}: {{ count }}x</h3>
   </div>
 </template>
 
