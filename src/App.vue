@@ -30,7 +30,13 @@
 
   <div class="container">
     <Section title="Favorite activity" />
-    <Favorite :name="highestActivity" :count="highestCount" :streak="currentStreak" :longest="longestStreak" />
+    <Favorite
+      :name="highestActivity"
+      :count="highestCount"
+      :streak="currentStreak"
+      :longest="longestStreak"
+      :total="totalDays"
+    />
   </div>
   <div class="container">
     <Section title="Recent activities" />
@@ -78,6 +84,7 @@ export default {
       highestCount: 0,
       currentStreak: 0,
       longestStreak: 0,
+      totalDays: 0,
     };
   },
   methods: {
@@ -210,6 +217,10 @@ export default {
         var d = new Date(b.date);
         return c - d;
       });
+      let startDate = new Date(this.didIts[this.didIts.length - 1].date);
+      let endDate = new Date(this.didIts[0].date);
+      this.totalDays = (startDate - endDate) / 86400000;
+      console.log("total days", this.totalDays);
       this.didIts = this.didIts.reverse().slice(0, 10);
       console.log("Current user", response.data);
       this.getStreak();
