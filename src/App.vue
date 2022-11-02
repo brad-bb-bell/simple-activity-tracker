@@ -30,7 +30,7 @@
 
   <div class="container">
     <Section title="Favorite activity" />
-    <Favorite :name="highestActivity" :count="highestCount" />
+    <Favorite :name="highestActivity" :count="highestCount" :streak="currentStreak" :longest="longestStreak" />
   </div>
   <div class="container">
     <Section title="Recent activities" />
@@ -76,6 +76,8 @@ export default {
       favorites: [],
       highestActivity: "Favorite Activity",
       highestCount: 0,
+      currentStreak: 0,
+      longestStreak: 0,
     };
   },
   methods: {
@@ -144,6 +146,7 @@ export default {
               return c - d;
             });
             this.didIts = this.didIts.reverse().slice(0, 10);
+            this.getStreak();
           });
       }
       this.selectedId = [];
@@ -172,7 +175,28 @@ export default {
         }
       });
       this.favorites.display();
-      console.log(this.highestActivity, this.highestCount);
+    },
+    getStreak() {
+      this.currentStreak = 0;
+      this.firstDidItDate = this.didIts[0].date;
+      for (let index = 0; index < this.didIts.length - 1; index++) {
+        if (new Date(this.didIts[index].date) - new Date(this.didIts[index + 1].date) === 0) {
+          console.log("The two didIts with the same date have index", index, "and", index + 1);
+        }
+      }
+      this.didIts.forEach((didIt, index) => {
+        if (new Date(this.firstDidItDate) - new Date(didIt.date) === index * 86400000) this.currentStreak++;
+      });
+      if (this.currentStreak > this.user.streak) {
+        axios
+          .patch("/users/" + this.user.id + ".json", {
+            streak: this.currentStreak,
+          })
+          .then((response) => {
+            console.log(response.data);
+            this.longestStreak = this.currentStreak;
+          });
+      }
     },
   },
   created() {
@@ -188,6 +212,7 @@ export default {
       });
       this.didIts = this.didIts.reverse().slice(0, 10);
       console.log("Current user", response.data);
+      this.getStreak();
     });
     class HashTable {
       constructor() {
