@@ -38,8 +38,9 @@
       :total="totalDays"
     />
   </div>
+
   <div class="container">
-    <Section title="Recent activities" />
+    <Section title="Recent activities" @change-number="changeNumber" :number="showNumber" />
     <DidIts :didIts="didIts" />
   </div>
   <!-- <Dropdown :activities="activities" /> -->
@@ -85,6 +86,7 @@ export default {
       currentStreak: 0,
       longestStreak: 0,
       totalDays: 0,
+      showNumber: 15,
     };
   },
   methods: {
@@ -152,7 +154,7 @@ export default {
               var d = new Date(b.date);
               return c - d;
             });
-            this.didIts = this.didIts.reverse().slice(0, 10);
+            this.didIts = this.didIts.reverse().slice(0, this.showNumber);
             this.getStreak();
           });
       }
@@ -164,6 +166,11 @@ export default {
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
       this.calendarDate = `${year}-${month}-${day}`;
+    },
+    changeNumber(number) {
+      console.log("changeNumber function");
+      this.showNumber = number;
+      this.didIts = this.didIts.reverse().slice(0, this.showNumber);
     },
     getFavorites() {
       this.activities.forEach((activity) => {
@@ -209,6 +216,7 @@ export default {
   created() {
     axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
       this.user = response.data;
+      this.longestStreak = response.data.streak;
       this.activities = response.data.activities;
       this.didIts = response.data.did_its;
       this.getFavorites();
@@ -221,7 +229,7 @@ export default {
       let endDate = new Date(this.didIts[0].date);
       this.totalDays = (startDate - endDate) / 86400000;
       console.log("total days", this.totalDays);
-      this.didIts = this.didIts.reverse().slice(0, 10);
+      this.didIts = this.didIts.reverse().slice(0, this.showNumber);
       console.log("Current user", response.data);
       this.getStreak();
     });
