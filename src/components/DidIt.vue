@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <h3>{{ this.didIt.name }} on {{ dateFormat(this.didIt.date) }}</h3>
-  </div>
+  <div>{{ this.didIt.name }} on {{ dateFormat(this.didIt.date) }}</div>
 </template>
 
 <script>

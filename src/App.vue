@@ -36,11 +36,13 @@
       :streak="currentStreak"
       :longest="longestStreak"
       :total="totalDays"
+      :since="firstDidItDate"
     />
+    <DisplayActivities :activities="activities" :favorites="favorites" />
   </div>
 
   <div class="container">
-    <Section title="Recent activities" @change-number="changeNumber" :number="showNumber" />
+    <Section title="Recent activities" />
     <DidIts :didIts="didIts" />
   </div>
   <!-- <Dropdown :activities="activities" /> -->
@@ -56,6 +58,7 @@ import DidIts from "./components/DidIts.vue";
 import AddActivity from "./components/AddActivity.vue";
 import Favorite from "./components/Favorite.vue";
 import Datepicker from "@vuepic/vue-datepicker";
+import DisplayActivities from "./components/DisplayActivities.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "vue";
 // import Dropdown from "./components/Dropdown.vue";
@@ -71,6 +74,7 @@ export default {
     AddActivity,
     DidIts,
     Favorite,
+    DisplayActivities,
     // Dropdown,
   },
   data() {
@@ -80,13 +84,14 @@ export default {
       selectedId: [],
       didIts: [],
       calendarDate: "",
-      favorites: [],
+      favorites: {},
       highestActivity: "Favorite Activity",
       highestCount: 0,
       currentStreak: 0,
       longestStreak: 0,
       totalDays: 0,
-      showNumber: 15,
+      showNumber: 10,
+      firstDidItDate: "",
     };
   },
   methods: {
@@ -156,6 +161,8 @@ export default {
             });
             this.didIts = this.didIts.reverse().slice(0, this.showNumber);
             this.getStreak();
+            let count = this.favorites.get(response.data.name) + 1;
+            this.favorites.set(response.data.name, count);
           });
       }
       this.selectedId = [];
@@ -207,7 +214,7 @@ export default {
             streak: this.currentStreak,
           })
           .then((response) => {
-            console.log(response.data);
+            console.log("New longest streak", response.data.streak);
             this.longestStreak = this.currentStreak;
           });
       }
@@ -228,7 +235,7 @@ export default {
       let startDate = new Date(this.didIts[this.didIts.length - 1].date);
       let endDate = new Date(this.didIts[0].date);
       this.totalDays = (startDate - endDate) / 86400000;
-      console.log("total days", this.totalDays);
+      console.log("Days since first activity", this.totalDays);
       this.didIts = this.didIts.reverse().slice(0, this.showNumber);
       console.log("Current user", response.data);
       this.getStreak();
