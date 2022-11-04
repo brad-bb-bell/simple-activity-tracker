@@ -4,7 +4,10 @@
     <br />
     Average: {{ showAverage(count, total) }} days/week
     <br />
+    <br />
     Since: {{ dateFormat(since) }}
+    <br />
+    Total days: {{ total }}
     <br />
     <br />
     Current streak: {{ streak }} days

@@ -1,5 +1,8 @@
 <template>
-  <div>{{ this.didIt.name }} on {{ dateFormat(this.didIt.date) }}</div>
+  <div class="didIt">
+    {{ this.didIt.name }} on {{ dateFormat(this.didIt.date) }}
+    <i @click="$emit('delete-didIt', this.didIt.id)" class="fas fa-times"></i>
+  </div>
 </template>
 
 <script>
@@ -17,3 +20,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+.didIt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>

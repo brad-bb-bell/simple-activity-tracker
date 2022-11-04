@@ -43,7 +43,7 @@
 
   <div class="container">
     <Section title="Recent activities" />
-    <DidIts :didIts="didIts" />
+    <DidIts @delete-didIt="deleteDidIt" :didIts="didIts" />
   </div>
   <!-- <Dropdown :activities="activities" /> -->
 </template>
@@ -108,6 +108,9 @@ export default {
           this.activities = this.activities.filter((activity) => activity.id != id);
         });
       }
+    },
+    deleteDidIt(id) {
+      console.log("delete didIt", id);
     },
     toggleActivity(id) {
       var activity = this.activities.find((element) => element.id === id);

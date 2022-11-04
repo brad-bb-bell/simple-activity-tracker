@@ -18,7 +18,7 @@ export default {
 
 <style>
 .fas {
-  color: red;
+  color: rgb(236, 118, 118);
 }
 .activity {
   background: #f4f4f4;

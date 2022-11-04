@@ -1,7 +1,7 @@
 <template>
   <br />
-  <h3>All activities</h3>
-  <div class="display-activities" :key="activity.id" v-for="activity in activities">
+  <h2>All activities</h2>
+  <div class="activity-count" :key="activity.id" v-for="activity in activities">
     {{ activity.name }}: {{ favorites.get(activity.name) }}x
   </div>
 </template>
@@ -14,4 +14,10 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+.activity-count {
+  background: #f4f4f4;
+  margin: 5px;
+  padding: 10px 20px;
+}
+</style>
