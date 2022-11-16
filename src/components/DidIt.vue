@@ -1,7 +1,7 @@
 <template>
   <div class="didIt">
     {{ this.didIt.name }} on {{ dateFormat(this.didIt.date) }}
-    <i @click="$emit('delete-didIt', this.didIt.id)" class="fas fa-times"></i>
+    <i @click="$emit('delete-didIt', didIt.id)" class="fas fa-times"></i>
   </div>
 </template>
 

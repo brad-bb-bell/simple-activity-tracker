@@ -1,7 +1,7 @@
 <template>
   <div class="didIt-list">
     <div class="didIt" :key="didIt.id" v-for="didIt in didIts">
-      <DidIt :didIt="didIt" />
+      <DidIt @delete-didIt="$emit('delete-didIt', didIt.id)" :didIt="didIt" />
     </div>
   </div>
 </template>

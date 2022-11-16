@@ -17,7 +17,7 @@ export default {
 <style scoped>
 .activity-count {
   background: #f4f4f4;
-  margin: 5px;
+  margin-top: 5px;
   padding: 10px 20px;
 }
 </style>

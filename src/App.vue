@@ -101,16 +101,30 @@ export default {
         this.activities.push(response.data);
       });
     },
-    deleteActivity(id) {
-      if (confirm("Are you sure you want to permanently remove this activity?")) {
-        axios.delete("/activities/" + id + ".json").then((response) => {
-          console.log("Success,", response.data);
-          this.activities = this.activities.filter((activity) => activity.id != id);
-        });
-      }
-    },
+    // deleteActivity(id) {
+    //   if (confirm("Are you sure you want to permanently remove this activity and all associated DidIts?")) {
+    //     var name =
+    //     axios.delete("/activities/" + id + ".json").then((response) => {
+    //       console.log("Success,", response.data);
+    //       this.activities = this.activities.filter((activity) => activity.id != id);
+    //     });
+    //     this.didIts.forEach((didIt) => {
+    //       if (didIt.name === )
+
+    //     axios.delete("/did_its/" + id + ".json").then((response) => {
+    //       console.log("Success,", response.data);
+    //       this.activities = this.activities.filter((activity) => activity.id != id);
+    //     });
+
+    //   })
+    //   }
+    // },
     deleteDidIt(id) {
       console.log("delete didIt", id);
+      axios.delete("/did_its/" + id + ".json").then((response) => {
+        console.log("Success,", response.data);
+        this.didIts = this.didIts.filter((didIt) => didIt.id != id);
+      });
     },
     toggleActivity(id) {
       var activity = this.activities.find((element) => element.id === id);
