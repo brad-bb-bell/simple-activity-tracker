@@ -223,7 +223,6 @@ export default {
     },
     getStreak() {
       this.currentStreak = 0;
-      this.firstDidItDate = this.didIts[0].date;
       for (let index = 0; index < this.didIts.length - 1; index++) {
         if (new Date(this.didIts[index].date) - new Date(this.didIts[index + 1].date) === 0) {
           console.log("The two didIts with the same date have index", index, "and", index + 1);
@@ -257,10 +256,10 @@ export default {
         var d = new Date(b.date);
         return c - d;
       });
+      this.firstDidItDate = this.didIts[0].date;
       let startDate = new Date(this.didIts[this.didIts.length - 1].date);
       let endDate = new Date(this.didIts[0].date);
       this.totalDays = (startDate - endDate) / 86400000;
-      console.log("Days since first activity", this.totalDays);
       this.didIts = this.didIts.reverse().slice(0, this.showNumber);
       console.log("Current user", response.data);
       this.getStreak();
