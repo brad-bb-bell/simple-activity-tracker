@@ -9,6 +9,9 @@
     <router-link to="/logout">Logout</router-link>
   </div>
   <router-view /> -->
+  <div class="login-container">
+    <TheLogin :user="user" />
+  </div>
 
   <div class="container">
     <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
@@ -59,6 +62,7 @@ import AddActivity from "./components/AddActivity.vue";
 import Favorite from "./components/Favorite.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import DisplayActivities from "./components/DisplayActivities.vue";
+import TheLogin from "./components/TheLogin.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "vue";
 // import Dropdown from "./components/Dropdown.vue";
@@ -75,6 +79,7 @@ export default {
     DidIts,
     Favorite,
     DisplayActivities,
+    TheLogin,
     // Dropdown,
   },
   data() {
@@ -368,6 +373,15 @@ body {
   margin: 30px auto;
   overflow: auto;
   min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+}
+.login-container {
+  max-width: 500px;
+  margin: 30px auto;
+  overflow: auto;
+  min-height: 50px;
   border: 1px solid steelblue;
   padding: 30px;
   border-radius: 5px;
