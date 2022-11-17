@@ -2,7 +2,7 @@
   <div :key="activity.id" v-for="activity in activities">
     <Activity
       @toggle-select="$emit('toggle-select', activity.id)"
-      @delete-activity="$emit('delete-activity', activity.id)"
+      @delete-activity="$emit('delete-activity', activity)"
       :activity="activity"
     />
   </div>

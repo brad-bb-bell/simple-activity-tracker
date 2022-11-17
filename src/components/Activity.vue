@@ -2,7 +2,7 @@
   <div @dblclick="$emit('toggle-select', activity.id)" :class="[activity.selected ? 'select' : '', 'activity']">
     <h3>
       {{ this.activity.name }}
-      <i @click="$emit('delete-activity', activity.id)" class="fas fa-times"></i>
+      <i @click="$emit('delete-activity', activity)" class="fas fa-times"></i>
     </h3>
   </div>
 </template>

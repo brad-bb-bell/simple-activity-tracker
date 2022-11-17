@@ -83,6 +83,7 @@ export default {
       activities: [],
       selectedId: [],
       didIts: [],
+      fullDidIts: [],
       calendarDate: "",
       favorites: {},
       highestActivity: "Favorite Activity",
@@ -101,24 +102,30 @@ export default {
         this.activities.push(response.data);
       });
     },
-    // deleteActivity(id) {
-    //   if (confirm("Are you sure you want to permanently remove this activity and all associated DidIts?")) {
-    //     var name =
-    //     axios.delete("/activities/" + id + ".json").then((response) => {
-    //       console.log("Success,", response.data);
-    //       this.activities = this.activities.filter((activity) => activity.id != id);
-    //     });
-    //     this.didIts.forEach((didIt) => {
-    //       if (didIt.name === )
-
-    //     axios.delete("/did_its/" + id + ".json").then((response) => {
-    //       console.log("Success,", response.data);
-    //       this.activities = this.activities.filter((activity) => activity.id != id);
-    //     });
-
-    //   })
-    //   }
-    // },
+    deleteActivity(activity) {
+      if (confirm("Are you sure you want to permanently remove this activity and all associated Did Its?")) {
+        var deleteName = activity.name;
+        var deleteActivityId = activity.id;
+        console.log("didIts length", this.fullDidIts.length);
+        this.fullDidIts.forEach(
+          (didIt) => {
+            console.log("forEach");
+            if (didIt.name === deleteName) {
+              console.log("delete me", didIt);
+              var deleteId = didIt.id;
+              axios.delete("/did_its/" + deleteId + ".json").then((response) => {
+                console.log("Success,", response.data);
+                this.didIts = this.didIts.filter((didIt) => didIt.id != deleteId);
+              });
+            }
+          },
+          axios.delete("/activities/" + deleteActivityId + ".json").then((response) => {
+            console.log("Success,", response.data);
+            this.activities = this.activities.filter((activity) => activity.id != deleteActivityId);
+          })
+        );
+      }
+    },
     deleteDidIt(id) {
       console.log("delete didIt", id);
       axios.delete("/did_its/" + id + ".json").then((response) => {
@@ -243,6 +250,7 @@ export default {
       this.longestStreak = response.data.streak;
       this.activities = response.data.activities;
       this.didIts = response.data.did_its;
+      this.fullDidIts = response.data.did_its;
       this.getFavorites();
       this.didIts.sort(function (a, b) {
         var c = new Date(a.date);
