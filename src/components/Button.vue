@@ -9,6 +9,5 @@ export default {
     text: String,
     color: String,
   },
-  emits: ["did-it"],
 };
 </script>

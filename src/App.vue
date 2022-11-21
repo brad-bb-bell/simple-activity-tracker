@@ -1,17 +1,27 @@
 <template>
-  <!-- <div id="nav">
-    <router-link to="/">Home</router-link>
-    |
-    <router-link to="/signup">Signup</router-link>
-    |
-    <router-link to="/login">Login</router-link>
-    |
-    <router-link to="/logout">Logout</router-link>
-  </div>
-  <router-view /> -->
   <div class="login-container">
-    <TheLogin :user="user" />
+    <div class="body">
+      <div id="nav">
+        <ul>
+          <li v-if="!isLoggedIn">
+            <router-link to="/signup">Signup</router-link>
+            |
+          </li>
+          <li v-if="!isLoggedIn">
+            <router-link to="/login">Login</router-link>
+            |
+          </li>
+          <li v-if="isLoggedIn" class="login-left">
+            <h1>{{ user.name }}</h1>
+          </li>
+          <li v-if="isLoggedIn">
+            <a @click="logout()">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
+  <router-view />
 
   <div class="container">
     <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
@@ -62,7 +72,6 @@ import AddActivity from "./components/AddActivity.vue";
 import Favorite from "./components/Favorite.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import DisplayActivities from "./components/DisplayActivities.vue";
-import TheLogin from "./components/TheLogin.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "vue";
 // import Dropdown from "./components/Dropdown.vue";
@@ -79,7 +88,6 @@ export default {
     DidIts,
     Favorite,
     DisplayActivities,
-    TheLogin,
     // Dropdown,
   },
   data() {
@@ -98,6 +106,7 @@ export default {
       totalDays: 0,
       showNumber: 10,
       firstDidItDate: "",
+      isLoggedIn: false,
     };
   },
   methods: {
@@ -247,28 +256,34 @@ export default {
           });
       }
     },
+    logout() {
+      console.log("logout");
+    },
   },
   created() {
-    axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
-      this.user = response.data;
-      this.longestStreak = response.data.streak;
-      this.activities = response.data.activities;
-      this.didIts = response.data.did_its;
-      this.fullDidIts = response.data.did_its;
-      this.getFavorites();
-      this.didIts.sort(function (a, b) {
-        var c = new Date(a.date);
-        var d = new Date(b.date);
-        return c - d;
+    if (localStorage.user_id) {
+      axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
+        this.user = response.data;
+        this.isLoggedIn = true;
+        this.longestStreak = response.data.streak;
+        this.activities = response.data.activities;
+        this.didIts = response.data.did_its;
+        this.fullDidIts = response.data.did_its;
+        this.getFavorites();
+        this.didIts.sort(function (a, b) {
+          var c = new Date(a.date);
+          var d = new Date(b.date);
+          return c - d;
+        });
+        this.firstDidItDate = this.didIts[0].date;
+        let startDate = new Date(this.didIts[this.didIts.length - 1].date);
+        let endDate = new Date(this.didIts[0].date);
+        this.totalDays = (startDate - endDate) / 86400000;
+        this.didIts = this.didIts.reverse().slice(0, this.showNumber);
+        console.log("Current user", response.data);
+        this.getStreak();
       });
-      this.firstDidItDate = this.didIts[0].date;
-      let startDate = new Date(this.didIts[this.didIts.length - 1].date);
-      let endDate = new Date(this.didIts[0].date);
-      this.totalDays = (startDate - endDate) / 86400000;
-      this.didIts = this.didIts.reverse().slice(0, this.showNumber);
-      console.log("Current user", response.data);
-      this.getStreak();
-    });
+    }
     class HashTable {
       constructor() {
         this.table = new Array(127);
@@ -378,13 +393,36 @@ body {
   border-radius: 5px;
 }
 .login-container {
+  display: block;
+  text-align: right;
   max-width: 500px;
   margin: 30px auto;
   overflow: auto;
   min-height: 50px;
   border: 1px solid steelblue;
-  padding: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
   border-radius: 5px;
+}
+.login-container a:link {
+  color: black;
+}
+.login-container a:visited {
+  color: black;
+}
+#nav ul {
+  list-style-type: none;
+}
+.login-left {
+  float: left;
+}
+#nav li a {
+  float: right;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 10px;
+  text-decoration: underline;
 }
 .center {
   display: flex;
