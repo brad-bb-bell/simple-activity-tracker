@@ -5,23 +5,29 @@
         <ul>
           <li v-if="!isLoggedIn">
             <router-link to="/signup">Signup</router-link>
-            |
           </li>
           <li v-if="!isLoggedIn">
             <router-link to="/login">Login</router-link>
-            |
           </li>
           <li v-if="isLoggedIn" class="login-left">
             <h1>{{ user.name }}</h1>
           </li>
           <li v-if="isLoggedIn">
-            <a @click="logout()">Logout</a>
+            <router-link to="/logout">Logout</router-link>
           </li>
         </ul>
       </div>
     </div>
   </div>
   <router-view />
+
+  <div v-if="!isLoggedIn" class="login-container">
+    <TheLogin />
+  </div>
+
+  <div v-if="isLoggedIn" class="login-container">
+    <TheLogout :name="user.name" />
+  </div>
 
   <div class="container">
     <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
@@ -72,6 +78,8 @@ import AddActivity from "./components/AddActivity.vue";
 import Favorite from "./components/Favorite.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import DisplayActivities from "./components/DisplayActivities.vue";
+import TheLogin from "./components/TheLogin.vue";
+import TheLogout from "./components/TheLogout.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "vue";
 // import Dropdown from "./components/Dropdown.vue";
@@ -88,6 +96,8 @@ export default {
     DidIts,
     Favorite,
     DisplayActivities,
+    TheLogin,
+    TheLogout,
     // Dropdown,
   },
   data() {
@@ -261,7 +271,9 @@ export default {
     },
   },
   created() {
+    console.log("isLoggedIn", this.isLoggedIn);
     if (localStorage.user_id) {
+      console.log("local storage user id");
       axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
         this.user = response.data;
         this.isLoggedIn = true;
