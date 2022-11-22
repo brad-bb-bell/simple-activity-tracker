@@ -22,11 +22,11 @@
   <router-view />
 
   <div v-if="!isLoggedIn" class="login-container">
-    <TheLogin />
+    <TheLogin @login="login" v-model="isLoggedIn" />
   </div>
 
   <div v-if="isLoggedIn" class="login-container">
-    <TheLogout :name="user.name" />
+    <TheLogout :name="user.name" @logout="logout" />
   </div>
 
   <div class="container">
@@ -47,22 +47,24 @@
     </div>
   </div>
 
-  <div class="container">
-    <Section title="Favorite activity" />
-    <Favorite
-      :name="highestActivity"
-      :count="highestCount"
-      :streak="currentStreak"
-      :longest="longestStreak"
-      :total="totalDays"
-      :since="firstDidItDate"
-    />
-    <DisplayActivities :activities="activities" :favorites="favorites" />
-  </div>
+  <div v-if="isLoggedIn">
+    <div class="container">
+      <Section title="Favorite activity" />
+      <Favorite
+        :name="highestActivity"
+        :count="highestCount"
+        :streak="currentStreak"
+        :longest="longestStreak"
+        :total="totalDays"
+        :since="firstDidItDate"
+      />
+      <DisplayActivities :activities="activities" :favorites="favorites" />
+    </div>
 
-  <div class="container">
-    <Section title="Recent activities" />
-    <DidIts @delete-didIt="deleteDidIt" :didIts="didIts" />
+    <div class="container">
+      <Section title="Recent activities" />
+      <DidIts @delete-didIt="deleteDidIt" :didIts="didIts" />
+    </div>
   </div>
   <!-- <Dropdown :activities="activities" /> -->
 </template>
@@ -116,8 +118,14 @@ export default {
       totalDays: 0,
       showNumber: 10,
       firstDidItDate: "",
-      isLoggedIn: false,
+      isLoggedIn: true,
+      newSessionParams: {},
     };
+  },
+  watch: {
+    $route: function () {
+      this.isLoggedIn = !!localStorage.jwt;
+    },
   },
   methods: {
     addActivity(activity) {
@@ -268,12 +276,36 @@ export default {
     },
     logout() {
       console.log("logout");
+      delete axios.defaults.headers.common["Authorization"];
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("user_id");
+      this.isLoggedIn = false;
+      this.user = {};
+      console.log("logged out");
+    },
+    login(params) {
+      console.log("login method");
+      console.log(params);
+      axios
+        .post("/sessions", params)
+        .then((response) => {
+          axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
+          localStorage.setItem("jwt", response.data.jwt);
+          localStorage.setItem("user_id", response.data.user_id);
+          this.isLoggedIn = true;
+        })
+        .catch((error) => {
+          console.log(error.response);
+          this.errors = ["Invalid email or password."];
+          this.email = "";
+          this.password = "";
+        });
+      console.log("logged in");
     },
   },
   created() {
     console.log("isLoggedIn", this.isLoggedIn);
-    if (localStorage.user_id) {
-      console.log("local storage user id");
+    if (this.isLoggedIn) {
       axios.get("/users/" + localStorage.user_id + ".json").then((response) => {
         this.user = response.data;
         this.isLoggedIn = true;
