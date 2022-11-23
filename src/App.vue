@@ -19,26 +19,35 @@
   </div>
   <router-view />
 
-  <div class="body">
+  <div v-if="!isLoggedIn">
     <div class="container">
       <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
-      <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
-      <AddActivity @add-activity="addActivity" />
-      <Datepicker
-        v-model="calendarDate"
-        placeholder="Select Date"
-        :format="format"
-        :enableTimePicker="false"
-        @update:modelValue="calendarDate"
-        autoApply
-        dark
-      />
-      <div class="center">
-        <Button @did-it="didIt" class="btn" text="Did It" color="green" />
+      <div class="container">
+        <h3 class="message">Please log in or sign up</h3>
       </div>
     </div>
+  </div>
 
-    <div v-if="isLoggedIn">
+  <div v-else>
+    <div class="body">
+      <div class="container">
+        <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
+        <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
+        <AddActivity @add-activity="addActivity" />
+        <Datepicker
+          v-model="calendarDate"
+          placeholder="Select Date"
+          :format="format"
+          :enableTimePicker="false"
+          @update:modelValue="calendarDate"
+          autoApply
+          dark
+        />
+        <div class="center">
+          <Button @did-it="didIt" class="btn" text="Did It" color="green" />
+        </div>
+      </div>
+
       <div class="container">
         <Section title="Favorite activity" />
         <Favorite
@@ -433,12 +442,6 @@ body {
   padding-right: 30px;
   border-radius: 5px;
 }
-.login-container a:link {
-  color: black;
-}
-.login-container a:visited {
-  color: black;
-}
 #nav ul {
   list-style-type: none;
 }
@@ -449,9 +452,12 @@ body {
   float: right;
   display: block;
   color: black;
+  background-color: #f4f4f4;
   text-align: center;
-  padding: 10px;
-  text-decoration: underline;
+  padding: 4px;
+  text-decoration: none;
+  margin: 6px;
+  border-style: solid;
 }
 .center {
   display: flex;
@@ -513,5 +519,10 @@ body {
   margin-left: 3px;
   align-items: left;
   justify-content: space-between;
+}
+.message {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 250px;
 }
 </style>
