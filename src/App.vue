@@ -1,72 +1,63 @@
 <template>
   <div class="login-container">
-    <div class="body">
-      <div id="nav">
-        <ul>
-          <li v-if="!isLoggedIn">
-            <router-link to="/signup">Signup</router-link>
-          </li>
-          <li v-if="!isLoggedIn">
-            <router-link to="/login">Login</router-link>
-          </li>
-          <li v-if="isLoggedIn" class="login-left">
-            <h1>{{ user.name }}</h1>
-          </li>
-          <li v-if="isLoggedIn">
-            <router-link to="/logout">Logout</router-link>
-          </li>
-        </ul>
-      </div>
+    <div id="nav">
+      <ul>
+        <li v-if="!isLoggedIn">
+          <router-link to="/signup">Signup</router-link>
+        </li>
+        <li v-if="!isLoggedIn">
+          <router-link to="/login">Login</router-link>
+        </li>
+        <li v-if="isLoggedIn" class="login-left">
+          <h1>{{ user.name }}</h1>
+        </li>
+        <li v-if="isLoggedIn">
+          <router-link to="/logout">Logout</router-link>
+        </li>
+      </ul>
     </div>
   </div>
   <router-view />
 
-  <div v-if="!isLoggedIn" class="login-container">
-    <TheLogin @login="login" v-model="isLoggedIn" />
-  </div>
-
-  <div v-if="isLoggedIn" class="login-container">
-    <TheLogout :name="user.name" @logout="logout" />
-  </div>
-
-  <div class="container">
-    <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
-    <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
-    <AddActivity @add-activity="addActivity" />
-    <Datepicker
-      v-model="calendarDate"
-      placeholder="Select Date"
-      :format="format"
-      :enableTimePicker="false"
-      @update:modelValue="calendarDate"
-      autoApply
-      dark
-    />
-    <div class="center">
-      <Button @did-it="didIt" class="btn" text="Did It" color="green" />
-    </div>
-  </div>
-
-  <div v-if="isLoggedIn">
+  <div class="body">
     <div class="container">
-      <Section title="Favorite activity" />
-      <Favorite
-        :name="highestActivity"
-        :count="highestCount"
-        :streak="currentStreak"
-        :longest="longestStreak"
-        :total="totalDays"
-        :since="firstDidItDate"
+      <Header title="Simple Activity Tracker 🤸 🏋️ 🧘" />
+      <Activities @toggle-select="toggleActivity" @delete-activity="deleteActivity" :activities="activities" />
+      <AddActivity @add-activity="addActivity" />
+      <Datepicker
+        v-model="calendarDate"
+        placeholder="Select Date"
+        :format="format"
+        :enableTimePicker="false"
+        @update:modelValue="calendarDate"
+        autoApply
+        dark
       />
-      <DisplayActivities :activities="activities" :favorites="favorites" />
+      <div class="center">
+        <Button @did-it="didIt" class="btn" text="Did It" color="green" />
+      </div>
     </div>
 
-    <div class="container">
-      <Section title="Recent activities" />
-      <DidIts @delete-didIt="deleteDidIt" :didIts="didIts" />
+    <div v-if="isLoggedIn">
+      <div class="container">
+        <Section title="Favorite activity" />
+        <Favorite
+          :name="highestActivity"
+          :count="highestCount"
+          :streak="currentStreak"
+          :longest="longestStreak"
+          :total="totalDays"
+          :since="firstDidItDate"
+        />
+        <DisplayActivities :activities="activities" :favorites="favorites" />
+      </div>
+
+      <div class="container">
+        <Section title="Recent activities" />
+        <DidIts @delete-didIt="deleteDidIt" :didIts="didIts" />
+      </div>
     </div>
   </div>
-  <!-- <Dropdown :activities="activities" /> -->
 </template>
 
 <script>
@@ -80,11 +71,8 @@ import AddActivity from "./components/AddActivity.vue";
 import Favorite from "./components/Favorite.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import DisplayActivities from "./components/DisplayActivities.vue";
-import TheLogin from "./components/TheLogin.vue";
-import TheLogout from "./components/TheLogout.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "vue";
-// import Dropdown from "./components/Dropdown.vue";
 
 export default {
   name: "App",
@@ -98,9 +86,6 @@ export default {
     DidIts,
     Favorite,
     DisplayActivities,
-    TheLogin,
-    TheLogout,
-    // Dropdown,
   },
   data() {
     return {
@@ -123,7 +108,7 @@ export default {
     };
   },
   watch: {
-    $route: function () {
+    $route() {
       this.isLoggedIn = !!localStorage.jwt;
     },
   },

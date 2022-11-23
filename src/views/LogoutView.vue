@@ -6,15 +6,16 @@ export default {
     delete axios.defaults.headers.common["Authorization"];
     localStorage.removeItem("jwt");
     localStorage.removeItem("user_id");
-    this.$router.push("/");
     this.isLoggedIn = false;
-    console.log("logged out");
+    this.user = {};
+    this.activities = [];
+    this.$router.push("/");
   },
 };
 </script>
 
 <template>
   <div class="login-container">
-    <h2>Successfully logged out</h2>
+    <h2>Please log in or sign up</h2>
   </div>
 </template>
