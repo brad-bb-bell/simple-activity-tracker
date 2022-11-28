@@ -458,6 +458,7 @@ body {
   text-decoration: none;
   margin: 6px;
   border-style: solid;
+  border-color: steelblue;
 }
 .center {
   display: flex;

@@ -32,20 +32,20 @@ export default {
         <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
       </ul>
       <div>
-        <label>Name:</label>
-        <input type="text" v-model="newUserParams.name" />
+        <label>Name: &nbsp;</label>
+        <input type="text" v-model="newUserParams.name" size="30" />
       </div>
       <div>
-        <label>Email:</label>
-        <input type="email" v-model="newUserParams.email" />
+        <label>Email: &nbsp;</label>
+        <input type="email" v-model="newUserParams.email" size="30" />
       </div>
       <div>
-        <label>Password:</label>
-        <input type="password" v-model="newUserParams.password" />
+        <label>Password: &nbsp;</label>
+        <input type="password" v-model="newUserParams.password" size="30" />
       </div>
       <div>
-        <label>Password confirmation:</label>
-        <input type="password" v-model="newUserParams.password_confirmation" />
+        <label>Password confirmation: &nbsp;</label>
+        <input type="password" v-model="newUserParams.password_confirmation" size="30" />
       </div>
       <input type="submit" value="Submit" />
     </form>
